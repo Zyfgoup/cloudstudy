@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zyfgoup.mapper.AdminMapper">
+
+
+    <select id="getRoles4AdminId" resultType="string">
+        select ar.role_name
+        from acl_admin_role aar inner join admin a on aar.user_id = a.id
+        INNER JOIN acl_role ar on aar.role_id = ar.id
+        where aar.user_id = #{id}
+        and ar.is_deleted = 0
+        and a.is_deleted = 0
+        and a.is_disabled = 0;
+    </select>
+</mapper>

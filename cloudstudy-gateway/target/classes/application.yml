@@ -1,0 +1,130 @@
+server:
+  port: 8888
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+      enabled: true
+      file-size-threshold: 0
+  redis:
+    host: localhost
+    password: 123456
+    port: 6379
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true  #表明gateway开启服务注册和发现的功能，并且spring cloud gateway自动根据服务发现为每一个服务创建了一个router，这个router将以服务名开头的请求路径转发到对应的服务。
+          lowerCaseServiceId: true   #是将请求路径上的服务名配置为小写（因为服务注册的时候，向注册中心注册时将服务名转成大写的了），比如以/service-hi/*的请求路径被路由转发到服务名为service-hi的服务上。
+
+# 前端请求地址规则  网站请求 /api/模块名/具体请求  客户端/api/admin/模块名/具体请求
+
+      routes:
+      #网站对应服务
+        - id: cloudstudy-user
+          uri: lb://cloudstudy-user
+          predicates: # 断言，路径相匹配的进行路由  test在实际应用中应为某个模块的名字 例如/user/**
+            - Path=/api/client/user/**
+          filters:
+            - SwaggerHeaderFilter
+#            - name: RequestRateLimiter
+#              args:
+#                redis-rate-limiter.replenishRate: 10 #每秒允许处理的请求数量
+#                redis-rate-limiter.burstCapacity: 20 #每秒最大处理的请求数量
+#                key-resolver: "#{@ipKeyResolver}"    #限流策略，对应策略的Bean
+            - StripPrefix=3  #会把/api/consumer/去掉  然后如果匹配上的话 请求路径就是cloudstudy-consumer的地址+/*
+
+  #auth
+        - id: cloudstudy-auth
+          uri: lb://cloudstudy-auth
+          predicates: # 断言，路径相匹配的进行路由  test在实际应用中应为某个模块的名字 例如/user/**
+            - Path=/api/client/auth/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=3
+  #service
+        - id: cloudstudy-service
+          uri: lb://cloudstudy-service
+          predicates: # 断言，路径相匹配的进行路由  test在实际应用中应为某个模块的名字 例如/user/**
+            - Path=/api/client/service/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=3
+        # 视频
+        - id: cloudstudy-vod
+          uri: lb://cloudstudy-vod
+          predicates: # 断言，路径相匹配的进行路由
+            - Path=/api/client/vod/**
+          filters:
+            - StripPrefix=3
+
+        # cms
+        - id: cloudstudy-cms
+          uri: lb://cloudstudy-cms
+          predicates: # 断言，路径相匹配的进行路由
+            - Path=/api/client/cms/**
+          filters:
+            - StripPrefix=3
+        #order
+        - id: cloudstudy-order
+          uri: lb://cloudstudy-order
+          predicates: # 断言，路径相匹配的进行路由  test在实际应用中应为某个模块的名字 例如/user/**
+            - Path=/api/client/order/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=3
+
+
+#客户端对应 多加了admin 过滤掉三个前缀  加admin为了判断是客户端还是管理端的请求 是否需要进行鉴权 还是只看token
+        - id: admin-cloudstudy-user
+          uri: lb://cloudstudy-user
+          predicates: # 断言，路径相匹配的进行路由
+            - Path=/api/admin/user/**
+          filters:
+            - StripPrefix=3
+
+#auth
+        - id: admin-cloudstudy-auth
+          uri: lb://cloudstudy-auth
+          predicates: # 断言，路径相匹配的进行路由
+            - Path=/api/admin/auth/**
+          filters:
+            - StripPrefix=3
+
+#课程、讲师等服务模块
+        - id: admin-cloudstudy-service
+          uri: lb://cloudstudy-service
+          predicates: # 断言，路径相匹配的进行路由
+            - Path=/api/admin/service/**
+          filters:
+            - StripPrefix=3
+# 视频
+        - id: admin-cloudstudy-vod
+          uri: lb://cloudstudy-vod
+          predicates: # 断言，路径相匹配的进行路由
+            - Path=/api/admin/vod/**
+          filters:
+            - StripPrefix=3
+# cms
+        - id: admin-cloudstudy-cms
+          uri: lb://cloudstudy-cms
+          predicates: # 断言，路径相匹配的进行路由
+            - Path=/api/admin/cms/**
+          filters:
+            - StripPrefix=3
+
+              #order
+        - id: admin-cloudstudy-order
+          uri: lb://cloudstudy-order
+          predicates: # 断言，路径相匹配的进行路由  test在实际应用中应为某个模块的名字 例如/user/**
+            - Path=/api/admin/order/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=3
+
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848

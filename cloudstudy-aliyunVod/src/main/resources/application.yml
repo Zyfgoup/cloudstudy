@@ -1,0 +1,25 @@
+server:
+  port: 9999
+
+
+aliyun:
+  vod:
+    file:
+     keyid: LTAI4GFiLRGuTqumyoMiVPvD
+     keysecret: EC7oi404l9eB1X2MO8k88btp8il14f
+
+spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+  application:
+    name: cloudstudy-vod
+    cloud:
+      nacos:
+        discovery:
+          server-addr: 127.0.0.1:8848
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB

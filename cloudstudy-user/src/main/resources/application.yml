@@ -1,0 +1,65 @@
+server:
+#为了兼容谷粒学院的微信扫码登录
+  port: 8150
+spring:
+  #上传头像
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 0
+      max-file-size: 100MB
+      max-request-size: 100MB
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+  application:
+    name: cloudstudy-user
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+        port: 8719
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cloudstudy?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**Mapper.xml
+  #驼峰 默认开启
+  configuration:
+    map-underscore-to-camel-case: true
+
+    #    输出到日志文件中 org.apache.ibatis.logging.slf4j.Slf4jImpl
+    # 如果是控制台 org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+
+
+#OSS
+aliyun:
+  endpoint: oss-cn-hangzhou.aliyuncs.com
+  keyid: LTAI4GFiLRGuTqumyoMiVPvD
+  keysecret: EC7oi404l9eB1X2MO8k88btp8il14f
+  bucketname: cloudstudy-avatar
+
+# \u5FAE\u4FE1\u5F00\u653E\u5E73\u53F0 appid
+wx:
+  open:
+    app_id: wxed9954c01bb89b47
+# \u5FAE\u4FE1\u5F00\u653E\u5E73\u53F0 appsecret
+    app_secret: a7482517235173ddb4083788de60b90e
+# \u5FAE\u4FE1\u5F00\u653E\u5E73\u53F0 \u91CD\u5B9A\u5411url
+    redirect_url: http://guli.shop/api/ucenter/wx/callback
+
+
+
+

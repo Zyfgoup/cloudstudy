@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zyfgoup.mapper.CourseMapper">
+
+    <select id="getMapById" parameterType="string" resultType="map">
+        select
+        et.`name` as teacherName,
+        ec.id,
+        ec.cover,
+        ec.lesson_num as lessonNum,
+        ec.title,
+        CONVERT(ec.price, DECIMAL(8,2)) as price ,
+        es1.title as categoryParentTitle,
+        es2.title as categoryTitle
+
+        from course ec
+        LEFT JOIN teacher et on ec.teacher_id = et.id
+        LEFT JOIN category es1 on ec.category_parent_id = es1.id
+        LEFT JOIN category es2 on ec.category_id = es2.id
+        where ec.id = #{id}
+    </select>
+
+    <select id="getMapByIdFront" parameterType="string" resultType="map">
+      SELECT
+        c.id,
+        c.title,
+        c.cover,
+        CONVERT(c.price, DECIMAL(8,2)) AS price,
+        c.lesson_num AS lessonNum,
+        c.cover,
+        c.buy_count AS buyCount,
+        c.view_count AS viewCount,
+        c.description,
+
+        t.id AS teacherId,
+        t.name AS teacherName,
+        t.intro,
+        t.avatar,
+
+        s1.id AS subjectLevelOneId,
+        s1.title AS subjectLevelOne,
+        s2.id AS subjectLevelTwoId,
+        s2.title AS subjectLevelTwo
+
+      FROM
+        course c
+        LEFT JOIN teacher t ON c.teacher_id = t.id
+        LEFT JOIN category s1 ON c.category_parent_id = s1.id
+        LEFT JOIN category s2 ON c.category_id = s2.id
+      WHERE
+        c.id = #{id}
+    </select>
+
+
+    <select id="getCategoryCourse" resultType="map">
+        select count(*) as value,b.title as name
+        from course a inner join category b on a.category_id = b.id
+        GROUP BY a.category_id
+    </select>
+
+    <!--sql语句：查询课程和讲师信息-->
+    <select id="getBaseCourseInfo" resultType="com.zyfgoup.vo.CourseWebVo">
+        SELECT ec.id,ec.title,ec.price,ec.lesson_num AS lessonNum,ec.cover,
+               ec.buy_count AS buyCount,ec.view_count AS viewCount,
+               ec.description,
+               et.id AS teacherId,et.name AS teacherName,et.intro,et.avatar,
+               es1.id AS subjectLevelOneId,es1.title AS subjectLevelOne,
+               es2.id AS subjectLevelTwoId,es2.title AS subjectLevelTwo
+        FROM course ec LEFT OUTER JOIN teacher et ON ec.teacher_id=et.id
+                    LEFT OUTER JOIN category es1 ON ec.category_parent_id=es1.id
+		            LEFT OUTER JOIN category es2 ON ec.category_id=es2.id
+        WHERE ec.id=#{courseId}
+    </select>
+
+</mapper>
