@@ -46,19 +46,19 @@ mybatis-plus:
 
 #OSS
 aliyun:
-  endpoint: oss-cn-hangzhou.aliyuncs.com
-  keyid: LTAI4GFiLRGuTqumyoMiVPvD
-  keysecret: EC7oi404l9eB1X2MO8k88btp8il14f
-  bucketname: cloudstudy-avatar
+  endpoint:
+  keyid:
+  keysecret:
+  bucketname:
 
 # \u5FAE\u4FE1\u5F00\u653E\u5E73\u53F0 appid
 wx:
   open:
-    app_id: wxed9954c01bb89b47
+    app_id:
 # \u5FAE\u4FE1\u5F00\u653E\u5E73\u53F0 appsecret
-    app_secret: a7482517235173ddb4083788de60b90e
+    app_secret:
 # \u5FAE\u4FE1\u5F00\u653E\u5E73\u53F0 \u91CD\u5B9A\u5411url
-    redirect_url: http://guli.shop/api/ucenter/wx/callback
+    redirect_url:
 
 
 
